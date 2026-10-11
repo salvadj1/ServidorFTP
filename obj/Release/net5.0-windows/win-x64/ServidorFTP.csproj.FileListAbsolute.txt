@@ -1,0 +1,15 @@
+E:\PROYECTOS OTROS\FTP SERVER\bin\Release\net5.0-windows\win-x64\ServidorFTP.exe
+E:\PROYECTOS OTROS\FTP SERVER\bin\Release\net5.0-windows\win-x64\ServidorFTP.deps.json
+E:\PROYECTOS OTROS\FTP SERVER\bin\Release\net5.0-windows\win-x64\ServidorFTP.runtimeconfig.json
+E:\PROYECTOS OTROS\FTP SERVER\bin\Release\net5.0-windows\win-x64\ServidorFTP.runtimeconfig.dev.json
+E:\PROYECTOS OTROS\FTP SERVER\bin\Release\net5.0-windows\win-x64\ServidorFTP.dll
+E:\PROYECTOS OTROS\FTP SERVER\bin\Release\net5.0-windows\win-x64\ref\ServidorFTP.dll
+E:\PROYECTOS OTROS\FTP SERVER\bin\Release\net5.0-windows\win-x64\ServidorFTP.pdb
+E:\PROYECTOS OTROS\FTP SERVER\obj\Release\net5.0-windows\win-x64\ServidorFTP.GeneratedMSBuildEditorConfig.editorconfig
+E:\PROYECTOS OTROS\FTP SERVER\obj\Release\net5.0-windows\win-x64\ServidorFTP.AssemblyInfoInputs.cache
+E:\PROYECTOS OTROS\FTP SERVER\obj\Release\net5.0-windows\win-x64\ServidorFTP.AssemblyInfo.cs
+E:\PROYECTOS OTROS\FTP SERVER\obj\Release\net5.0-windows\win-x64\ServidorFTP.csproj.CoreCompileInputs.cache
+E:\PROYECTOS OTROS\FTP SERVER\obj\Release\net5.0-windows\win-x64\ServidorFTP.dll
+E:\PROYECTOS OTROS\FTP SERVER\obj\Release\net5.0-windows\win-x64\ref\ServidorFTP.dll
+E:\PROYECTOS OTROS\FTP SERVER\obj\Release\net5.0-windows\win-x64\ServidorFTP.pdb
+E:\PROYECTOS OTROS\FTP SERVER\obj\Release\net5.0-windows\win-x64\ServidorFTP.genruntimeconfig.cache

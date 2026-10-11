@@ -13,3 +13,4 @@ E:\PROYECTOS OTROS\FTP SERVER\obj\Debug\net5.0-windows\ServidorFTP.dll
 E:\PROYECTOS OTROS\FTP SERVER\obj\Debug\net5.0-windows\ref\ServidorFTP.dll
 E:\PROYECTOS OTROS\FTP SERVER\obj\Debug\net5.0-windows\ServidorFTP.pdb
 E:\PROYECTOS OTROS\FTP SERVER\obj\Debug\net5.0-windows\ServidorFTP.genruntimeconfig.cache
+E:\PROYECTOS OTROS\FTP SERVER\obj\Debug\net5.0-windows\ServidorFTP.csproj.AssemblyReference.cache
