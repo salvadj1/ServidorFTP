@@ -1,0 +1,47 @@
+MIGRACIÓN DE ServidorFTP: DE APLICACIÓN WINFORMS A SERVICIO CON PANEL WEB Y ANUNCIO EN RED (.NET 5)
+Fecha: 2026-10-12
+
+ARCHIVOS MODIFICADOS
+- ServidorFTP.csproj
+  Pasa de WinForms (net5.0-windows) a Microsoft.NET.Sdk.Web (net5.0). Añade los paquetes
+  Microsoft.Extensions.Hosting.WindowsServices y Microsoft.Extensions.Hosting.Systemd 5.0.1.
+- Program.cs
+  Sustituye el arranque de WinForms por un host genérico: funciona como consola, servicio de
+  Windows o servicio systemd. Crea AdminAuth al arrancar para anotar la contraseña inicial.
+- Ftp/FtpModels.cs
+  FtpUser guarda PasswordHash (PBKDF2) en lugar de la contraseña en texto plano. Añade
+  CheckPassword, SetPassword y MigrateLegacyPassword (convierte los users.json antiguos).
+- Ftp/FtpSession.cs
+  FindAccount valida con FtpUser.CheckPassword (1 línea).
+- Ftp/FtpServerCore.cs
+  Nuevo método KickSession(id) para expulsar sesiones desde el panel.
+
+ARCHIVOS NUEVOS
+- Ftp/PasswordHasher.cs: hash/verificación PBKDF2-SHA256 y generador de contraseñas aleatorias.
+- Startup.cs: servicios, archivos estáticos, middleware de login (protege /api/* y /hub) y endpoints.
+- Config/AppSettings.cs: ajustes persistentes (settings.json), rutas de datos y nota de primer arranque.
+- Net/MdnsAdvertiser.cs: anunciante mDNS/DNS-SD sin dependencias (_ftp._tcp y _http._tcp, nombre.local).
+- Services/FtpHostService.cs: aloja el servidor FTP, usuarios, historial, estadísticas, velocidad y mDNS.
+- Services/AdminAuth.cs: login del panel (hash, cookie HttpOnly, bloqueo tras 5 fallos por IP).
+- Services/LiveHub.cs: hub SignalR (eventos tick, log y status).
+- Services/Dtos.cs: objetos de intercambio con el navegador (nunca incluyen contraseñas).
+- Api/ApiEndpoints.cs: API REST (login, estado, start/stop/restart, usuarios, sesiones, logs, CSV, stats, ajustes).
+- wwwroot/index.html, style.css, app.js: panel web (Panel en vivo, Usuarios, Historial, Estadísticas, Ajustes).
+- wwwroot/lib/signalr.min.js: cliente SignalR 5.0.17 (local, sin CDN).
+
+ARCHIVOS A ELIMINAR DEL REPO (ya no se usan)
+MainForm.cs, UserEditDialog.cs, Ui/FtpTheme.cs, Ui/SpeedChart.cs, Ui/ThemedListView.cs, Ui/ThemedControls.cs
+
+NOTAS DE USO
+- Primer arranque: se generan contraseñas aleatorias (panel y usuario FTP "admin") y se anotan en
+  la consola y en PRIMER_ARRANQUE.txt (carpeta de datos). Bórralo tras copiarlas.
+- Datos (users.json, settings.json, logs, FtpRoot): carpeta del ejecutable, o la de la variable FTPPANEL_DATA.
+- Panel: http://IP:8080 (cambiable en Ajustes). Es HTTP: usar solo en LAN o detrás de proxy HTTPS.
+- Abrir en el firewall: puerto FTP (2121), rango pasivo (50000-50100), panel (8080) y UDP 5353 (mDNS).
+- Windows: dotnet publish -c Release -r win-x64 --self-contained false -o publish
+  luego: sc create ServidorFTP binPath= "C:\ruta\publish\ServidorFTP.exe" start= auto
+- Linux: dotnet publish -c Release -o publish y crear un servicio systemd (Type=notify) que ejecute ServidorFTP.dll.
+- Las contraseñas de users.json antiguos se convierten a hash automáticamente en el primer arranque.
+- Probado en un entorno de pruebas (compilación sin errores, login del panel, API, login FTP real,
+  migración de contraseñas, SignalR y respuesta mDNS). No se pudo compilar con net5.0 ni restaurar
+  los paquetes de servicio por falta de acceso a NuGet: se validó con net8.0 sin esos dos paquetes.

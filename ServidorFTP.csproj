@@ -1,12 +1,25 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
-    <UseWindowsForms>true</UseWindowsForms>
     <RootNamespace>ServidorFTP</RootNamespace>
     <AssemblyName>ServidorFTP</AssemblyName>
     <PackageId>ServidorFTP</PackageId>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="_OTRAS VERSIONES\**" />
+    <Content Remove="_OTRAS VERSIONES\**" />
+    <EmbeddedResource Remove="_OTRAS VERSIONES\**" />
+    <None Remove="_OTRAS VERSIONES\**" />
+  </ItemGroup>
+  <!-- Copia los .bat de control junto al .exe al compilar y al publicar -->
+  <ItemGroup>
+    <None Update="IniciarServicio.bat" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <None Update="PararServicio.bat" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="5.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="5.0.1" />
+  </ItemGroup>
 </Project>

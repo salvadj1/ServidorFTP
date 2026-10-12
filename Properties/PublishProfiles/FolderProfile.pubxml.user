@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PublishTargetUrl>X:\Servidor FTP\ActualizacionesVS</_PublishTargetUrl>
+    <History>True|2026-10-12T02:11:51.6596949Z;True|2026-10-12T03:35:20.2310474+02:00;True|2026-10-12T03:25:22.3441833+02:00;True|2026-10-12T03:24:10.4781299+02:00;True|2026-10-12T03:23:47.0317809+02:00;True|2026-10-12T03:23:19.9134629+02:00;</History>
+  </PropertyGroup>
+</Project>

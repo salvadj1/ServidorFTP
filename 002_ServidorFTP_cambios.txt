@@ -1,0 +1,15 @@
+BATS DE CONTROL DEL SERVICIO (INICIAR / PARAR) COPIADOS JUNTO AL EXE
+Fecha: 2026-10-12
+
+ARCHIVOS MODIFICADOS
+- ServidorFTP.csproj
+  Copia IniciarServicio.bat y PararServicio.bat a la carpeta de salida al compilar y al publicar.
+
+ARCHIVOS NUEVOS
+- IniciarServicio.bat: ejecuta "sc start ServidorFTP" y muestra el estado. Se eleva a administrador solo.
+- PararServicio.bat: ejecuta "sc stop ServidorFTP" y muestra el estado. Se eleva a administrador solo.
+
+NOTAS
+- Colocar los dos .bat en la raiz del proyecto (junto a ServidorFTP.csproj).
+- El nombre del servicio es la variable SERVICIO (al principio de cada .bat); debe coincidir con el usado en "sc create".
+- No se han podido ejecutar en este entorno (no es Windows).

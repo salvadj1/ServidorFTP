@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Servidor FTP</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<section id="login" class="center hidden">
+  <div class="card">
+    <h1>Servidor FTP</h1>
+    <input id="lUser" placeholder="Usuario" autocomplete="username">
+    <input id="lPass" type="password" placeholder="Contraseña" autocomplete="current-password">
+    <button id="lBtn" class="primary">Entrar</button>
+    <p id="lErr" class="err"></p>
+  </div>
+</section>
+
+<section id="app" class="hidden">
+  <header>
+    <h1>Servidor FTP</h1>
+    <span id="pill" class="pill off">Detenido</span>
+    <nav>
+      <button data-tab="dash" class="active">Panel</button>
+      <button data-tab="users">Usuarios</button>
+      <button data-tab="history">Historial</button>
+      <button data-tab="stats">Estadísticas</button>
+      <button data-tab="settings">Ajustes</button>
+      <button id="logout">Salir</button>
+    </nav>
+  </header>
+
+  <main>
+    <div id="dash" class="tab">
+      <div class="row">
+        <button id="bStart" class="primary">Iniciar</button>
+        <button id="bStop">Detener</button>
+        <button id="bRestart">Reiniciar</button>
+        <span id="info" class="muted"></span>
+      </div>
+      <div class="kpis" id="kpis"></div>
+      <div class="card"><div class="row between"><b>Velocidad</b><span id="speedTxt" class="muted"></span></div><canvas id="chart" height="150"></canvas></div>
+      <div class="card"><b>Sesiones activas</b>
+        <div class="scroll"><table id="tSessions"><thead><tr><th>Id</th><th>Usuario</th><th>Cliente</th><th>Conectado</th><th>Último comando</th><th>Carpeta</th><th>Subido</th><th>Bajado</th><th></th></tr></thead><tbody></tbody></table></div>
+      </div>
+      <div class="card"><b>Actividad reciente</b>
+        <div class="scroll"><table id="tLive"><tbody></tbody></table></div>
+      </div>
+    </div>
+
+    <div id="users" class="tab hidden">
+      <div class="row"><button id="uAdd" class="primary">Añadir usuario</button></div>
+      <div class="card scroll"><table id="tUsers"><thead><tr><th>Usuario</th><th>Carpeta raíz</th><th>Permisos</th><th>Contraseña</th><th></th></tr></thead><tbody></tbody></table></div>
+    </div>
+
+    <div id="history" class="tab hidden">
+      <div class="row">
+        <select id="hDays"><option value="1">Hoy</option><option value="3">3 días</option><option value="7">7 días</option><option value="30">30 días</option></select>
+        <select id="hCat"><option value="">Todas</option><option>Connection</option><option>Transfer</option><option>File</option><option>Error</option></select>
+        <input id="hUser" placeholder="Usuario">
+        <input id="hText" placeholder="Buscar texto / archivo / IP">
+        <button id="hGo" class="primary">Buscar</button>
+        <a id="hCsv" href="#" class="btn">Exportar CSV</a>
+      </div>
+      <div class="card scroll"><table id="tHist"><thead><tr><th>Hora</th><th>Tipo</th><th>Usuario</th><th>Cliente</th><th>Evento</th><th>Archivo</th><th>Tamaño</th><th>Duración</th></tr></thead><tbody></tbody></table></div>
+      <p id="hCount" class="muted"></p>
+    </div>
+
+    <div id="stats" class="tab hidden">
+      <div class="row"><select id="sDays"><option value="1">Hoy</option><option value="7">7 días</option><option value="30">30 días</option></select></div>
+      <div class="card scroll"><table id="tStats"><thead><tr><th>Usuario</th><th>Conexiones</th><th>Subidas</th><th>Descargas</th><th>Archivos</th><th>Subido</th><th>Bajado</th><th>Errores</th><th>Última actividad</th></tr></thead><tbody></tbody></table></div>
+    </div>
+
+    <div id="settings" class="tab hidden">
+      <div class="card grid" id="setForm">
+        <label>Puerto FTP<input id="sFtpPort" type="number"></label>
+        <label>Pasivo desde<input id="sPMin" type="number"></label>
+        <label>Pasivo hasta<input id="sPMax" type="number"></label>
+        <label>IP pasiva externa (opcional)<input id="sPExt"></label>
+        <label>Días de historial<input id="sRet" type="number"></label>
+        <label>Dirección del panel<input id="sBind"></label>
+        <label>Puerto del panel<input id="sWeb" type="number"></label>
+        <label>Nombre en la red<input id="sName"></label>
+        <label class="full">Carpeta base de usuarios<input id="sBase"></label>
+        <label class="chk full"><input id="sRestrict" type="checkbox"> Limitar las carpetas de los usuarios a la carpeta base</label>
+        <label class="chk"><input id="sAuto" type="checkbox"> Iniciar FTP con el servicio</label>
+        <label class="chk"><input id="sAdv" type="checkbox"> Anunciar en la red (mDNS)</label>
+        <div class="full row"><button id="sSave" class="primary">Guardar ajustes</button><span id="sMsg" class="muted"></span></div>
+      </div>
+      <div class="card grid">
+        <b class="full">Cambiar contraseña del panel</b>
+        <label>Actual<input id="pCur" type="password"></label>
+        <label>Nueva (mín. 8)<input id="pNew" type="password"></label>
+        <div class="full row"><button id="pSave">Cambiar</button><span id="pMsg" class="muted"></span></div>
+      </div>
+    </div>
+  </main>
+</section>
+
+<dialog id="uDlg">
+  <form method="dialog" id="uForm" class="grid">
+    <b class="full" id="uTitle">Usuario</b>
+    <label>Nombre<input id="uName"></label>
+    <label>Contraseña<input id="uPass" type="password" autocomplete="new-password"></label>
+    <label class="full">Carpeta raíz<input id="uRoot"></label>
+    <label class="chk full"><input id="uRO" type="checkbox"> Solo lectura</label>
+    <p id="uErr" class="err full"></p>
+    <div class="full row"><button type="button" id="uOk" class="primary">Guardar</button><button type="button" id="uCancel">Cancelar</button></div>
+  </form>
+</dialog>
+
+<script src="lib/signalr.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

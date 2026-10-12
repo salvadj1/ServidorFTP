@@ -1,0 +1,28 @@
+CARPETA BASE CONFIGURABLE PARA LOS USUARIOS FTP Y AUTORELLENO DE LA CARPETA RAIZ
+Fecha: 2026-10-12
+
+ARCHIVOS MODIFICADOS
+- Config/AppSettings.cs
+  Nuevos ajustes BaseFolder (carpeta base; vacio = FtpRoot en la carpeta de datos) y RestrictToBase
+  (limitar usuarios a la base, activo por defecto). Nuevo metodo ResolveBaseFolder().
+- Services/FtpHostService.cs
+  Validate ahora crea la carpeta "base\nombre" si no se indica ninguna, y con RestrictToBase rechaza
+  carpetas fuera de la base (incluye intentos con ".." o prefijos parecidos). Al editar se permite
+  conservar la carpeta que el usuario ya tenia. El nombre de usuario debe empezar por letra, numero o "_"
+  (evita nombres ".."). El admin inicial se crea en "base\admin".
+- Services/Dtos.cs
+  SettingsDto con BaseFolder y RestrictToBase.
+- Api/ApiEndpoints.cs
+  GET/PUT /api/settings incluyen la carpeta base y el limite; al guardar se crea la carpeta base.
+- wwwroot/index.html
+  Ajustes: campo "Carpeta base de usuarios" y casilla "Limitar las carpetas de los usuarios a la carpeta base".
+- wwwroot/app.js
+  Al crear un usuario, la carpeta raiz se autorellena con "carpeta base + nombre" mientras se escribe
+  el nombre (deja de hacerlo si se edita a mano la carpeta). Guarda y carga los dos ajustes nuevos.
+
+ARCHIVOS NUEVOS
+- Ftp/PathGuard.cs: comprueba si una ruta esta dentro de una carpeta base (reutilizable, comentado).
+
+NOTAS
+- Los usuarios existentes fuera de la base siguen funcionando; solo se bloquea cambiarles la carpeta a otra fuera.
+- Probado en el entorno de pruebas (compilacion sin errores y limites de carpeta); la interfaz no se probo en navegador.

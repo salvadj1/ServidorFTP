@@ -1,0 +1,15 @@
+BATS DE CONTROL: INICIAR = ARRANCAR + AUTOMATICO / PARAR = PARAR + MANUAL
+Fecha: 2026-10-12
+
+ARCHIVOS MODIFICADOS
+- IniciarServicio.bat
+  Antes de "sc start" ejecuta "sc config ServidorFTP start= delayed-auto": el servicio queda en
+  inicio automatico retrasado (arranca con Windows cuando la red ya esta lista) y se inicia ahora.
+- PararServicio.bat
+  Antes de "sc stop" ejecuta "sc config ServidorFTP start= demand": quita el inicio automatico
+  (pasa a manual) y para el servicio. Con Windows reiniciado ya no arrancara solo.
+
+NOTAS
+- Siguen pidiendo permisos de administrador automaticamente.
+- Para volver a activar el servicio con Windows basta ejecutar IniciarServicio.bat.
+- No se han podido ejecutar en este entorno (no es Windows).

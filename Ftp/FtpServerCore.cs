@@ -69,6 +69,15 @@ namespace SimpleFtp.Ftp
         public List<FtpSessionInfo> GetSessions() =>
             _sessions.Values.Select(s => s.GetInfo()).OrderBy(i => i.Id).ToList();
 
+        /// <summary>Expulsa una sesión activa cerrando su conexión. Devuelve false si no existe.</summary>
+        /// <param name="id">Id de la sesión (ver <see cref="FtpSessionInfo.Id"/>).</param>
+        public bool KickSession(int id)
+        {
+            if (!_sessions.TryRemove(id, out FtpSession? s)) return false;
+            s.Dispose();
+            return true;
+        }
+
         /// <summary>Bucle que acepta clientes hasta que se cancela el token.</summary>
         private async Task AcceptLoopAsync(TcpListener listener, CancellationToken ct)
         {

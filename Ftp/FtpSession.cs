@@ -276,7 +276,7 @@ namespace SimpleFtp.Ftp
             foreach (FtpUser u in _opt.Users)
             {
                 if (u.Username.Length == 0 || !u.Username.Equals(user, StringComparison.OrdinalIgnoreCase)) continue;
-                if (u.Username.Equals("anonymous", StringComparison.OrdinalIgnoreCase) || u.Password == pass) return u;
+                if (u.CheckPassword(pass)) return u;
             }
             return null;
         }

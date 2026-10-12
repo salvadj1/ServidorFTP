@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Text.Json.Serialization;
 
 namespace SimpleFtp.Ftp
 {
@@ -58,12 +59,51 @@ namespace SimpleFtp.Ftp
     {
         /// <summary>Nombre de usuario (sin distinguir mayúsculas). "anonymous" acepta cualquier clave.</summary>
         public string Username { get; set; } = "";
-        /// <summary>Contraseña (texto plano).</summary>
-        public string Password { get; set; } = "";
+        /// <summary>
+        /// Contraseña en texto plano. OBSOLETO: solo se lee de users.json antiguos para migrarla
+        /// a <see cref="PasswordHash"/>; nunca se vuelve a escribir.
+        /// </summary>
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string? Password { get; set; }
+        /// <summary>Hash PBKDF2 de la contraseña (formato de <see cref="PasswordHasher"/>).</summary>
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string? PasswordHash { get; set; }
         /// <summary>Carpeta física raíz de este usuario; no puede salir de ella.</summary>
         public string RootPath { get; set; } = "";
         /// <summary>Si es true, el usuario solo puede listar y descargar.</summary>
         public bool ReadOnly { get; set; }
+
+        /// <summary>Indica si el usuario es la cuenta anónima (acepta cualquier contraseña).</summary>
+        [JsonIgnore]
+        public bool IsAnonymous => Username.Equals("anonymous", StringComparison.OrdinalIgnoreCase);
+
+        /// <summary>Indica si el usuario tiene una contraseña definida.</summary>
+        [JsonIgnore]
+        public bool HasPassword => !string.IsNullOrEmpty(PasswordHash);
+
+        /// <summary>Comprueba una contraseña contra el hash guardado (cuenta anónima: siempre true).</summary>
+        /// <param name="plain">Contraseña recibida del cliente.</param>
+        public bool CheckPassword(string plain) =>
+            IsAnonymous || (!string.IsNullOrEmpty(PasswordHash) && PasswordHasher.Verify(plain, PasswordHash));
+
+        /// <summary>Establece una contraseña nueva (se guarda solo su hash).</summary>
+        /// <param name="plain">Contraseña en texto plano.</param>
+        public void SetPassword(string plain)
+        {
+            PasswordHash = PasswordHasher.Hash(plain);
+            Password = null;
+        }
+
+        /// <summary>
+        /// Convierte una contraseña antigua en texto plano a hash.
+        /// Devuelve true si hubo algo que migrar (hay que guardar users.json).
+        /// </summary>
+        public bool MigrateLegacyPassword()
+        {
+            if (string.IsNullOrEmpty(Password)) return false;
+            SetPassword(Password);
+            return true;
+        }
     }
 
     /// <summary>Configuración del servidor FTP.</summary>
